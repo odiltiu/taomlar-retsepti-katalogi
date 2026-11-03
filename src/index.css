@@ -247,15 +247,22 @@ body {
 
 .accordion-icon.open { transform: rotate(45deg); }
 
+/* Tuzatildi: oldin max-height: 500px edi va uzun yo'riqnomaning oxirgi qadamlari kesilib qolardi.
+   Grid usuli matn uzunligidan qat'i nazar to'liq ochiladi. */
 .accordion-content {
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.35s ease, padding 0.25s ease;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease, padding 0.25s ease;
 }
 
 .accordion-content.open {
-  max-height: 500px;
+  grid-template-rows: 1fr;
   padding-bottom: 14px;
+}
+
+.accordion-inner {
+  overflow: hidden;
+  min-height: 0;
 }
 
 /* ─── Ingredients ─── */
@@ -339,4 +346,82 @@ body {
   color: #999;
   font-size: 14px;
   font-weight: 500;
+}
+
+/* ─── Qidiruv va filtr ─── */
+.filters {
+  max-width: 1200px;
+  margin: 28px auto 0;
+  padding: 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.filters input,
+.filters select {
+  padding: 11px 14px;
+  border: 1px solid #ddd3c2;
+  border-radius: 12px;
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+}
+
+.filters input {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.filters input:focus,
+.filters select:focus {
+  outline: 2px solid #c8963e;
+  outline-offset: 1px;
+}
+
+.result-count {
+  color: #7a6f5d;
+  font-size: 14px;
+}
+
+.empty-note {
+  text-align: center;
+  color: #7a6f5d;
+  margin: 48px 24px;
+}
+
+/* ─── Xatolik ─── */
+.error-box {
+  max-width: 420px;
+  margin: 60px auto;
+  padding: 24px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #f1c7c7;
+  border-radius: 16px;
+  color: #8a1f1f;
+}
+
+.error-box button {
+  margin-top: 14px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #1a1a1a;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

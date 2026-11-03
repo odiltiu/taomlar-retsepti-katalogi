@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Ingredients from './Ingredients';
 import Instructions from './Instructions';
 
+const DIFFICULTY_LABEL = { Easy: 'Oson', Medium: "O'rtacha", Hard: 'Qiyin' };
+
 const difficultyClass = {
   Easy: 'difficulty-easy',
   Medium: 'difficulty-medium',
@@ -31,14 +33,10 @@ function RecipeDetails({ recipe }) {
       <div className="recipe-body">
         <h3 className="recipe-name">{recipe.name}</h3>
 
-        {recipe.tags?.length > 0 && (
+        {/* Tuzatildi: mealType va tags'da bir xil so'z bo'lsa kalitlar to'qnashardi */}
+        {(recipe.mealType?.length > 0 || recipe.tags?.length > 0) && (
           <div className="recipe-tags">
-            {recipe.mealType?.map((t) => (
-              <span key={t} className="tag">
-                {t}
-              </span>
-            ))}
-            {recipe.tags.slice(0, 3).map((tag) => (
+            {[...new Set([...(recipe.mealType || []), ...(recipe.tags || []).slice(0, 3)])].map((tag) => (
               <span key={tag} className="tag">
                 {tag}
               </span>
@@ -48,54 +46,63 @@ function RecipeDetails({ recipe }) {
 
         <div className="recipe-stats">
           <div className="stat-item">
-            <span className="stat-value">{totalTime}m</span>
-            <span className="stat-label">Total Time</span>
+            <span className="stat-value">{totalTime} daq</span>
+            <span className="stat-label">Umumiy vaqt</span>
           </div>
           <div className="stat-item">
             <span className="stat-value">{recipe.caloriesPerServing}</span>
-            <span className="stat-label">Calories</span>
+            <span className="stat-label">Kaloriya</span>
           </div>
           <div className="stat-item">
             <span
               className={`stat-value ${difficultyClass[recipe.difficulty] || ''}`}
             >
-              {recipe.difficulty}
+              {DIFFICULTY_LABEL[recipe.difficulty] || recipe.difficulty}
             </span>
-            <span className="stat-label">Difficulty</span>
+            <span className="stat-label">Qiyinligi</span>
           </div>
         </div>
 
         <div className="accordion-section">
           <button
+            type="button"
             className="accordion-toggle"
             onClick={() => setShowIngredients((v) => !v)}
+            aria-expanded={showIngredients}
+            aria-controls={`ingredients-${recipe.id}`}
           >
-            Ingredients ({recipe.ingredients.length})
-            <span className={`accordion-icon ${showIngredients ? 'open' : ''}`}>
+            Masalliqlar ({recipe.ingredients.length})
+            <span aria-hidden="true" className={`accordion-icon ${showIngredients ? 'open' : ''}`}>
               +
             </span>
           </button>
-          <div className={`accordion-content ${showIngredients ? 'open' : ''}`}>
-            <Ingredients recipe={recipe} />
+          <div id={`ingredients-${recipe.id}`} className={`accordion-content ${showIngredients ? 'open' : ''}`} inert={!showIngredients}>
+            <div className="accordion-inner"><Ingredients recipe={recipe} /></div>
           </div>
         </div>
 
         <div className="accordion-section">
           <button
+            type="button"
             className="accordion-toggle"
             onClick={() => setShowInstructions((v) => !v)}
+            aria-expanded={showInstructions}
+            aria-controls={`instructions-${recipe.id}`}
           >
-            Instructions ({recipe.instructions.length})
+            Tayyorlanishi ({recipe.instructions.length})
             <span
+              aria-hidden="true"
               className={`accordion-icon ${showInstructions ? 'open' : ''}`}
             >
               +
             </span>
           </button>
           <div
+            id={`instructions-${recipe.id}`}
             className={`accordion-content ${showInstructions ? 'open' : ''}`}
+            inert={!showInstructions}
           >
-            <Instructions recipe={recipe} />
+            <div className="accordion-inner"><Instructions recipe={recipe} /></div>
           </div>
         </div>
       </div>
